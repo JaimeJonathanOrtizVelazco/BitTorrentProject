@@ -2,28 +2,24 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class TrackerLeecherServer extends Thread{
+public class TrackerLeecherServer extends Thread {
     private static final int PORT = 4200;
+    private static ServerSocket server;
+
+    public TrackerLeecherServer() throws IOException {
+        server = new ServerSocket(PORT);
+    }
 
     @Override
     public void run() {
-        ServerSocket server = null;
-        try {
-            server = new ServerSocket(PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        boolean loop=true;
-        while (loop) {
-            assert server != null;
-            Socket socket = null;
+        while (true) {
             try {
-                socket = server.accept();
+                Socket socket = server.accept();
+                System.out.println("El leecher " + socket.getInetAddress().getHostAddress() + " se ha conectado a la red");
+                new TrackerLeecher(socket).start();
             } catch (IOException e) {
-                e.printStackTrace();
-                loop=false;
+                break;
             }
-            new TrackerLeecher(socket).start();
         }
     }
 }

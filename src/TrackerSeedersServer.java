@@ -1,27 +1,28 @@
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class TrackerSeedersServer extends Thread {
     private static final int PORT = 4201;
+    private static ServerSocket server;
+
+    public TrackerSeedersServer() throws IOException {
+        server = new ServerSocket(PORT);
+    }
 
     @Override
     public void run() {
-        ServerSocket server = null;
-        try {
-            server = new ServerSocket(PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         while (true) {
-            assert server != null;
-            Socket socket = null;
             try {
-                socket = server.accept();
+                Socket socket = server.accept();
+                System.out.println("El seeder " + socket.getInetAddress() + " se ha unido a la red");
+                new TrackerSeeders(socket).start();
             } catch (IOException e) {
                 e.printStackTrace();
+                break;
             }
-            new TrackerSeeders(socket).start();
         }
     }
 }
