@@ -17,7 +17,7 @@ public class TrackerSeedersServer extends Thread {
         while (true) {
             try {
                 Socket socket = server.accept();
-                System.out.println("El seeder " + socket.getInetAddress() + " se ha unido a la red");
+                System.out.println("El seeder " + socket.getInetAddress().getHostAddress() + " se ha unido a la red");
                 new TrackerSeeders(socket).start();
             } catch (IOException e) {
                 e.printStackTrace();
